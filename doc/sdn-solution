@@ -1,0 +1,92 @@
+data channel:
+
+    udp full mesh:
+                   udp             udp
+        edge-node <---> edge-node <---> edge-node                                                  
+         ^                               ^
+         +-------------------------------+    
+                        udp
+
+    udp partial mesh:
+                   udp             udp
+        edge-node <---> edge-node <---> edge-node                                                  
+
+    udp & websocket hybrid:
+                  websocket             udp              websocket           udp
+        edge-node ---------> edge-node <---> edge-node <--------- edge-node <---> edge-node      
+
+    websocket-only edge-node as bouncer:
+                   udp             websocket           websocket             udp
+        edge-node <---> edge-node <--------- edge-node ---------> edge-node <---> edge-node        
+
+    multiple layer of websocket connection:
+                   udp             websocket            websocket
+        edge-node <---> edge-node <--------- edge-node <--------- edge-node                        
+
+
+control channel:
+
+            super-node
+             ^      ^
+    websocket|      |websocket
+       edge-node   edge-node
+
+
+connection capability (data channel) for specified peer node (select only one item in the following list, priority order is 1,2,3,4):
+  1. udp                      can connect to the peer's udp ip:port
+  2. udp-hole-punching        can reach the peer using udp-hole-punching through cooperation
+  3. websocket                can connect to the peer's websocket ip:port
+  4. none                     can not actively connect to the peer
+
+bouncer                 can forward, any node can be bouncer
+
+config on super-node:
+  *. password-list
+  *. vpn-ipv4-network
+  *. vpn-ipv4-network
+  *. super-node-url-list
+
+node state data:
+  *. node-public-key
+  *. node-state-datetime
+  *. data-channel-udp-server-ip-port-list
+  *. data-channel-websocket-server-ip-port-list
+  *. connection-capability-for-every-peer-node
+  *. vpn-ipv4-address
+  *. vpn-ipv6-address
+  *. node-data
+     1. uplink-list
+     2. downlink-list
+     3. dns-to-some-domain
+     4. proxy-to-some-domain
+     5. vpn-to-some-ip
+     6. fast-channel-to-some-ip
+
+
+control channel message:
+  edge-node -> super-node
+    *. join
+    *. update-node-data
+
+  super-node -> edge-node
+    *. punch-udp-hole
+    *. set-ipv4-address
+    *. set-ipv6-address
+    *. add-edge-node
+    *. del-edge-node
+
+
+
+
+control channel can have username/password, to control who can join the mesh.
+
+websocket exists only for compatible reason.
+userspace wireguard would be used if websocket is enabled, which is slow.
+for control channel not-connectable sarenio, change won't be flooded in realtime.
+
+small node-public-key get priority.
+
+how to test udp server connection?
+
+
+
