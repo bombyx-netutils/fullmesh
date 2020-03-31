@@ -1,4 +1,4 @@
-data channel:
+network topology:
 
          udp        udp
    node <---> node <---> node						udp full mesh
@@ -9,7 +9,6 @@ data channel:
           udp        udp
    node <---> node <---> node						udp partial mesh
 
-
         websocket        udp        websocket       udp
    node ---------> node <---> node <--------- node <---> node		udp & websocket hybrid
 
@@ -19,14 +18,6 @@ data channel:
          udp        websocket       websocket
    node <---> node <--------- node <--------- node			multiple layer of websocket connection
 
-
-control channel:
-
-          http        http        http
-    node <----> node <----> node <---- node
-     ^                       ^
-     +-----------------------+
-               http
 
 
 connection capability (control channel) for specified peer node:
