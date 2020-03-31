@@ -1,0 +1,84 @@
+data channel:
+
+         udp        udp
+   node <---> node <---> node						udp full mesh
+    ^                     ^
+    +---------------------+    
+              udp
+
+          udp        udp
+   node <---> node <---> node						udp partial mesh
+
+
+        websocket        udp        websocket       udp
+   node ---------> node <---> node <--------- node <---> node		udp & websocket hybrid
+
+         udp        websocket      websocket        udp
+   node <---> node <--------- node ---------> node <---> node		websocket-only node as bouncer
+
+         udp        websocket       websocket
+   node <---> node <--------- node <--------- node			multiple layer of websocket connection
+
+
+control channel:
+
+          http        http        http
+    node <----> node <----> node <---- node
+     ^                       ^
+     +-----------------------+
+               http
+
+
+connection capability (control channel) for specified peer node:
+  1. connectable
+  2. not-connectable
+
+connection capability (data channel) for specified peer node (select only one item in the following list, priority order is 1,2,3,4):
+  1. udp			can connect to the peer's udp ip:port
+  2. udp-hole-punching		can reach the peer using udp-hole-punching through cooperation
+  3. websocket			can connect to the peer's websocket ip:port
+  4. none			can not actively connect to the peer
+
+bouncer				can forward, any node can be bouncer
+
+node state data:
+  1. node-public-key
+  2. node-state-datetime
+  *. global config:
+     *. password-list (old password would be kept to a specified datetime)
+     *. vpn-ipv4-network
+     *. vpn-ipv4-network
+  *. control-channel-server-url-list
+  *. data-channel-udp-server-ip-port-list
+  *. data-channel-websocket-server-ip-port-list
+  *. connection-capability-for-every-peer-node
+  *. vpn-ipv4-address
+  *. vpn-ipv6-address
+  *. aux-data
+     1. uplink-list
+     2. downlink-list
+     3. dns-to-some-domain
+     4. proxy-to-some-domain
+     5. vpn-to-some-ip
+     6. fast-channel-to-some-ip
+
+
+control channel message:
+1. hello: request(node-state-data-index-list), response(node-state-data-index-list)
+*. push-node-state-data:
+*. pull-node-state-data: only for control channel not-connectable sarenio
+3. punch-udp-hole:
+6. bye:
+
+control channel can have username/password, to control who can join the mesh.
+
+websocket exists only for compatible reason.
+userspace wireguard would be used if websocket is enabled, which is slow.
+for control channel not-connectable sarenio, change won't be flooded in realtime.
+
+small node-public-key get priority.
+
+how to test udp server connection?
+
+
+
