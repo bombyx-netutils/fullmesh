@@ -38,7 +38,7 @@ node state data:
   *. global config:
      *. password-list (old password would be kept to a specified datetime)
      *. vpn-ipv4-network
-     *. vpn-ipv4-network
+     *. vpn-ipv6-network
   *. control-channel-server-url-list
   *. data-channel-udp-server-ip-port-list
   *. data-channel-websocket-server-ip-port-list
@@ -72,4 +72,18 @@ small node-public-key get priority.
 how to test udp server connection?
 
 
+vpn-ipv4-network和vpn-ipv6-network如果和vpn网络中任意路由器的aux-data冲突，则应自动生成新的network，具体流程？
+1. 
+
+不同节点的下挂网络之间是可以存在重复ip的，因为下挂网络的ip必须通过NAT互通。
+该方案的一个优点是bomby-mesh作为network-manager的一个vpn实例即可，无需额外API。
+
+
+如何支持1个节点属于多个vpn？
+1. 两个vpn的网络的vpn-ipv4-network如何退避？
+2. 两个vpn的aux-data如何融合？
+
+
+类似产品：
+1. https://github.com/costela/wesher
 
